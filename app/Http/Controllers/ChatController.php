@@ -30,7 +30,8 @@ class ChatController extends Controller
 
 
     //ao usuário sair do grupo ou deletar a conversa, ficará salvo quando ele deletou.
-    public function leaveGroup($id)
+    public function destroy($id, $user_id)
     {
+        return ChatService::destroy($id, $user_id);
     }
 }

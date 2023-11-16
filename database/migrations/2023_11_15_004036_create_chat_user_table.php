@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->foreignId('chat_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->primary(['chat_id', 'user_id']);
-            $table->timestamp('joined_at');
+            $table->timestamp('joined_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
         });
     }

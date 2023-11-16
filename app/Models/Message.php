@@ -30,13 +30,5 @@ class Message extends Model
         }
     }
 
-    /**
-     * Get the chatUser that owns the Message
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function chatUser(): BelongsTo
-    {
-        return $this->belongsTo(ChatUser::class, 'chat_id', 'user_id');
-    }
+
 }

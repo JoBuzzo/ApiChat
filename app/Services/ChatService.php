@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Requests\ChatStoreRequest;
 use App\Models\Chat;
+use App\Models\ChatUser;
 use App\Models\Message;
 use Illuminate\Http\Request;
 class ChatService
@@ -86,5 +87,18 @@ class ChatService
             'chat' => $chat,
             'users' => $chat->users
         ]);
+    }
+
+    public static function destroy($id, $user_id)
+    {
+        if($chatUser = ChatUser::where('chat_id', '=', $id)->where('user_id', $user_id)->first()){
+
+            $chatUser->delete();
+
+            return response()->json(['success' => true]);
+        }
+        
+        return response()->json(['success' => false]);
+
     }
 }

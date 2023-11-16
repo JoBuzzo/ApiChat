@@ -25,3 +25,5 @@ route::get('chats/{id}', [ChatController::class, 'chats'])->name('index.chat.gro
 route::get('chat/{id}/{user_id}', [ChatController::class, 'show'])->name('show.chat.group');
 
 route::post('enviar/mensagem', [ChatController::class, 'sendMessage'])->name('sendMessage.chat.group');
+
+route::delete('sair/chat/{id}/{user_id}', [ChatController::class, 'destroy'])->name('destroy.chat.group');

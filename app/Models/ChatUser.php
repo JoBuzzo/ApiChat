@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class ChatUser extends Model
 {
@@ -21,6 +22,11 @@ class ChatUser extends Model
         'chat_id',
         'joined_at'
     ];
+
+    public function delete(){
+
+        return DB::update('update '.$this->table.' set deleted_at = ? where user_id = ? and chat_id = ?', [now(), $this->user_id, $this->chat_id]);
+    }
 
     protected $casts = [
         'joined_at' => 'datetime'
