@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ChatService;
+use App\Services\ExitChatService;
 use App\Services\MessageService;
 use Illuminate\Http\Request;
 
@@ -28,10 +29,13 @@ class ChatController extends Controller
         return MessageService::store($request);
     }
 
-
-    //ao usuário sair do grupo ou deletar a conversa, ficará salvo quando ele deletou.
     public function destroy($id, $user_id)
     {
         return ChatService::destroy($id, $user_id);
+    }
+
+    public function exit($id, $user_id)
+    {
+        return ExitChatService::delete($id, $user_id);
     }
 }

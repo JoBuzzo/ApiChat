@@ -24,16 +24,27 @@ class ChatUser extends Model
         'joined_at',
     ];
 
-    public function delete(){
+    public function delete()
+    {
+        return DB::update('update ' . $this->table . ' set deleted_at = ? where user_id = ? and chat_id = ?', [now(), $this->user_id, $this->chat_id]);
+    }
 
-        return DB::update('update '.$this->table.' set deleted_at = ? where user_id = ? and chat_id = ?', [now(), $this->user_id, $this->chat_id]);
+    public function exit()
+    {
+        return DB::table($this->table)
+            ->where('user_id', $this->user_id)
+            ->where('chat_id', $this->chat_id)
+            ->update([
+                'deleted_at' => now(),
+                'leave' => 1,
+            ]);
     }
 
     protected $casts = [
         'joined_at' => 'datetime',
         'leave' => 'boolean'
     ];
-    
+
     /**
      * Get the user that owns the ChatUser
      *
