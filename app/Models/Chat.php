@@ -18,7 +18,7 @@ class Chat extends Model
 
     public function getPhotoAttribute($value){
         if($value){
-            return $value = asset("storage/chats/".$value);
+            return $value = asset("storage/images/".$value);
         }
     }
     /**

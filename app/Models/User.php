@@ -19,10 +19,16 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'avatar',
         'email',
         'password',
     ];
 
+    public function getAvatarAttribute($value){
+        if($value){
+            return $value = asset("storage/images/".$value);
+        }
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

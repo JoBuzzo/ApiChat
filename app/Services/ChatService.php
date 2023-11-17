@@ -24,6 +24,7 @@ class ChatService
             if ($chat->users->count() == 1 && $chat->name == null) {
                 $friend = $chat->users->first();
                 $chat->name = $friend->name;
+                $chat->photo = $friend->getRawOriginal('avatar');
             }
         });
 
@@ -41,6 +42,7 @@ class ChatService
                 foreach ($chat->users as $user) {
                     if ($user->id != $user_id) {
                         $chat->name = $user->name;
+                        $chat->photo = $user->getRawOriginal('avatar');
                         break;
                     }
                 }
@@ -93,7 +95,7 @@ class ChatService
     {
         ChatStoreRequest::validate($request);
 
-        $photo = $request->photo ? FileHandlerService::store($request->photo, 'chats') : null;
+        $photo = $request->photo ? FileHandlerService::store($request->photo, 'images') : null;
 
         $chat = Chat::create([
             'name' => $request->name,

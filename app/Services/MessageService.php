@@ -19,7 +19,7 @@ class MessageService
 
         if ($chatUser) {
 
-            $media = $request->media ? FileHandlerService::store($request->media, 'messages') : null;
+            $media = $request->media ? FileHandlerService::store($request->media, 'images') : null;
 
             $message = Message::create([
                 'user_id' => $request->user_id,

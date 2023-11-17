@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,6 +16,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->longText('avatar')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -22,11 +24,11 @@ return new class extends Migration
             $table->timestamps();
         });
 
-
         User::create([
             'name' => 'João Lucas',
+            'avatar' =>  "7xlsVTM2iBqVKNlXttYPO0iMtlyiDHDXzH3qZukk" . ".jpg",
             'email' => 'joaolucas@gmail.com',
-            'password' => bcrypt("12345678")
+            'password' => bcrypt("12345678"),
         ]); //1
 
         User::create([
@@ -49,6 +51,7 @@ return new class extends Migration
 
         User::create([
             'name' => 'Vitória',
+            'avatar' =>  "RqubVHTHcIsYJp8m0ktzYC8eL8t8DFWXn6kXc1Ky" . ".jpg",
             'email' => 'Vitória@gmail.com',
             'password' => bcrypt("12345678")
         ]); //5
