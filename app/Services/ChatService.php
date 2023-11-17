@@ -32,7 +32,7 @@ class ChatService
 
     public static function show($id, $user_id)
     {
-        if(!$chat = Chat::with(['users'])->find($id)){
+        if (!$chat = Chat::with(['users'])->find($id)) {
             return response()->json(['Error' => 'chat não encontrado']);
         }
 
@@ -49,30 +49,44 @@ class ChatService
             return response()->json(['Error' => 'Você não tem permição para acessar esse chat']);
         }
 
-        if (ChatUser::withTrashed()->where('user_id', $user_id)->where('chat_id', $id)->first()->deleted_at == null) {
-            $messages = Message::where('messages.chat_id', $chat->id)
-                ->leftJoin('users', 'messages.user_id', '=', 'users.id')
-                ->leftJoin('messages as parent', 'messages.parent_id', '=', 'parent.id')
-                ->leftJoin('users as parent_user', 'parent.user_id', '=', 'parent_user.id')
-                ->select(
-                    'users.name as user_name',
-                    'messages.user_id',
-                    'messages.id as message_id',
-                    'messages.content',
-                    'messages.media',
-                    'messages.sent_at',
-                    'messages.parent_id as parent_message_id',
-                    'parent_user.id as parent_user_id',
-                    'parent_user.name as parent_user_name',
-                    'parent.content as parent_content',
-                )
+
+        $messages = Message::where('messages.chat_id', $chat->id)
+            ->leftJoin('users', 'messages.user_id', '=', 'users.id')
+            ->leftJoin('messages as parent', 'messages.parent_id', '=', 'parent.id')
+            ->leftJoin('users as parent_user', 'parent.user_id', '=', 'parent_user.id')
+            ->select(
+                'users.name as user_name',
+                'messages.user_id',
+                'messages.id as message_id',
+                'messages.content',
+                'messages.media',
+                'messages.sent_at',
+                'messages.parent_id as parent_message_id',
+                'parent_user.id as parent_user_id',
+                'parent_user.name as parent_user_name',
+                'parent.content as parent_content',
+            );
+
+        $chatUser = ChatUser::withTrashed()->where('user_id', $user_id)->where('chat_id', $id)->first();
+
+        if ($chatUser->deleted_at == null) {
+
+            return response()->json([
+                'chat' => $chat,
+                'messages' => $messages
+                    ->orderBy('messages.sent_at', 'asc')
+                    ->get()
+            ]);
+        }
+
+
+        return response()->json([
+            'chat' => $chat,
+            'messages' => $messages
+                ->where('messages.sent_at', '>', $chatUser->deleted_at)
                 ->orderBy('messages.sent_at', 'asc')
-                ->get();
-
-                return response()->json(['chat' => $chat, 'messages' => $messages]);
-            }
-
-        return response()->json(['chat' => $chat, 'messages' => []]);
+                ->get()
+        ]);
     }
 
     public static function store(Request $request)

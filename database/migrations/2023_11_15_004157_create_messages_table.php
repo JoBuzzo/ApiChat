@@ -20,7 +20,7 @@ return new class extends Migration
                 ->constrained('messages'); //caso a mensagem seja resposta de uma mensagem.
             $table->longText('content')->nullable();
             $table->longText('media')->nullable();
-            $table->timestamp('sent_at')->default(DB::raw('CURRENT_TIMESTAMP'));;
+            $table->timestamp('sent_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
         });
     }
