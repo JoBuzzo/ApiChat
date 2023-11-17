@@ -20,7 +20,8 @@ class ChatUser extends Model
     protected $fillable = [
         'user_id',
         'chat_id',
-        'joined_at'
+        'leave',
+        'joined_at',
     ];
 
     public function delete(){
@@ -29,8 +30,10 @@ class ChatUser extends Model
     }
 
     protected $casts = [
-        'joined_at' => 'datetime'
+        'joined_at' => 'datetime',
+        'leave' => 'boolean'
     ];
+    
     /**
      * Get the user that owns the ChatUser
      *

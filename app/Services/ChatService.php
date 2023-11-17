@@ -14,9 +14,11 @@ class ChatService
     public static function index($id)
     {
         $chats = Chat::with(['users' => function ($query) use ($id) {
-            $query->where('user_id', '!=', $id);
-        }])->get();
-
+            $query->where('user_id', '!=', $id)->where('leave', false);
+        }])->whereHas('users', function ($query) use ($id) {
+            $query->where('user_id', $id)->where('leave', false);
+        })->get();
+        
 
         // Caso o chat ter apenas o outro usuário nele,
         // o nome do chat terá o nome do outro usuário (amigo)
@@ -51,6 +53,13 @@ class ChatService
             return response()->json(['Error' => 'Você não tem permição para acessar esse chat']);
         }
 
+        $chatUser = ChatUser::withTrashed()->where('user_id', $user_id)->where('chat_id', $id)->first();
+
+        if ($chatUser->leave) {
+            return response()->json([
+                'error' => 'Você não pode acessar um chat que você saiu'
+            ]);
+        }
 
         $messages = Message::where('messages.chat_id', $chat->id)
             ->leftJoin('users', 'messages.user_id', '=', 'users.id')
@@ -69,7 +78,6 @@ class ChatService
                 'parent.content as parent_content',
             );
 
-        $chatUser = ChatUser::withTrashed()->where('user_id', $user_id)->where('chat_id', $id)->first();
 
         if ($chatUser->deleted_at == null) {
 

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('chat_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->primary(['chat_id', 'user_id']);
+            $table->boolean('leave')->default(false);
             $table->timestamp('joined_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->softDeletes();
         });

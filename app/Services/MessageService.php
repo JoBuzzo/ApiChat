@@ -17,7 +17,7 @@ class MessageService
             ->first();
 
 
-        if ($chatUser) {
+        if ($chatUser && !$chatUser->leave) {
 
             $media = $request->media ? FileHandlerService::store($request->media, 'images') : null;
 
