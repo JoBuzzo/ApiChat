@@ -12,7 +12,7 @@ class MessageService
     {
         MessageStoreRequest::validate($request);
 
-        $chatUser = ChatUser::where('user_id', $request->user_id)
+        $chatUser = ChatUser::withTrashed()->where('user_id', $request->user_id)
             ->where('chat_id', $request->chat_id)
             ->first();
 

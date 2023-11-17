@@ -111,7 +111,7 @@ class ChatService
 
     public static function destroy($id, $user_id)
     {
-        if ($chatUser = ChatUser::where('chat_id', '=', $id)->where('user_id', $user_id)->first()) {
+        if ($chatUser = ChatUser::withTrashed()->where('chat_id', '=', $id)->where('user_id', $user_id)->first()) {
 
             $chatUser->delete();
 
