@@ -32,7 +32,9 @@ class ChatService
 
     public static function show($id, $user_id)
     {
-        $chat = Chat::with(['users'])->find($id);
+        if(!$chat = Chat::with(['users'])->find($id)){
+            return response()->json(['Error' => 'chat não encontrado']);
+        }
 
         if ($chat->users->contains($user_id)) {
             if (!$chat->name && $chat->users->count() <= 2) {
