@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Chat extends Model
 {
@@ -17,9 +18,10 @@ class Chat extends Model
         'photo'
     ];
 
-    public function getPhotoAttribute($value){
-        if($value){
-            return $value = asset("storage/images/".$value);
+    public function getPhotoAttribute($value)
+    {
+        if ($value) {
+            return $value = asset("storage/images/" . $value);
         }
     }
     /**
@@ -33,8 +35,22 @@ class Chat extends Model
             ->withPivot(['joined_at', 'deleted_at', 'leave']);
     }
 
-    public function chat_user() : HasMany
+    public function chat_user(): HasMany
     {
         return $this->hasMany(ChatUser::class, 'chat_id', 'id');
+    }
+
+    public function addUsers($Ids = [])
+    {
+        foreach ($Ids as $id) {
+            DB::table('chat_user')
+                ->updateOrInsert(
+                    ['chat_id' => $this->id, 'user_id' => $id],
+                    [
+                        'joined_at' => now(),
+                        'leave' => 0,
+                ]
+            );
+        }
     }
 }

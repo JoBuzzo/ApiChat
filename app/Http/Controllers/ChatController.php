@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\ChatService;
 use App\Services\ExitChatService;
+use App\Services\MembersChatService;
 use App\Services\MessageService;
 use Illuminate\Http\Request;
 
@@ -37,5 +38,10 @@ class ChatController extends Controller
     public function exit($id, $user_id)
     {
         return ExitChatService::delete($id, $user_id);
+    }
+
+    public function addMembers(Request $request)
+    {
+        return MembersChatService::store($request);
     }
 }

@@ -29,3 +29,5 @@ route::post('enviar/mensagem', [ChatController::class, 'sendMessage'])->name('se
 route::delete('excluir/chat/{id}/{user_id}', [ChatController::class, 'destroy'])->name('destroy.chat.group');
 
 route::delete('sair/chat/{id}/{user_id}', [ChatController::class, 'exit'])->name('exit.chat.group');
+
+route::post('adicionar/integrante',  [ChatController::class, 'addMembers'])->name('add.member.chat.group');
