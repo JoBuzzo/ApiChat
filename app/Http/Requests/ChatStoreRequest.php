@@ -8,6 +8,18 @@ use Illuminate\Http\Request;
 class ChatStoreRequest
 {
 
+    /**
+     * ChatStoreRequest::class
+     *
+     * @param  Request $request
+     * 
+     * @return void
+     * 
+     * @request $request->name
+     * @request $request->ids[]
+     * @request $request->photo
+     * @request $request->description
+     */
     public static function validate(Request $request)
     {
         $request->validate([

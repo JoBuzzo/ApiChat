@@ -6,13 +6,27 @@ use App\Http\Requests\ChatStoreRequest;
 use App\Models\Chat;
 use App\Models\ChatUser;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
-class ChatService
+class ChatService extends Service
 {
 
+    /**
+     * Listagem dos chats do usuário
+     *
+     * @param  User  $id
+     * @return \App\Traits\HttpResponses
+     */
     public static function index($id)
     {
+        if(!User::where('id', $id)->exists()){
+            return self::error('User not found', Response::HTTP_NOT_FOUND, [
+                "error" => "User $id not found"
+            ]);
+        }
+
         $chats = Chat::with(['users' => function ($query) use ($id) {
             $query->where('user_id', '!=', $id)->where('leave', false);
         }])->whereHas('users', function ($query) use ($id) {
@@ -30,9 +44,16 @@ class ChatService
             }
         });
 
-        return response()->json(['chats' => $chats]);
+        return self::response("User $id chats", Response::HTTP_OK, $chats);
     }
 
+    /**
+     * Visualização do chat em que o usuário está
+     *
+     * @param  Chat  $id
+     * @param  User  $user_id
+     * @return \App\Traits\HttpResponses
+     */
     public static function show($id, $user_id)
     {
         if (!$chat = Chat::with(['users'])->find($id)) {
@@ -99,6 +120,17 @@ class ChatService
         ]);
     }
 
+    /**
+     * Criação de um chat
+     *
+     * @param  Request  $request
+     * @return \App\Traits\HttpResponses
+     * 
+     * @request $request->name
+     * @request $request->ids[]
+     * @request $request->photo
+     * @request $request->description
+     */
     public static function store(Request $request)
     {
         ChatStoreRequest::validate($request);
@@ -113,21 +145,29 @@ class ChatService
 
         $chat->users()->attach($request->ids);
 
-        return response()->json([
+        return self::response("Successfully", Response::HTTP_CREATED, [
             'chat' => $chat,
             'users' => $chat->users
         ]);
     }
 
+    /**
+     * Exclusão das mensagens do usuário (Excluído apenas para ele)
+     * 
+     *
+     * @param  Chat  $id
+     * @param  User  $user_id
+     * @return \App\Traits\HttpResponses
+     */
     public static function destroy($id, $user_id)
     {
         if ($chatUser = ChatUser::withTrashed()->where('chat_id', '=', $id)->where('user_id', $user_id)->first()) {
 
             $chatUser->delete();
 
-            return response()->json(['success' => true]);
+            return self::noContent();
         }
 
-        return response()->json(['success' => false]);
+        return self::error("Not found", Response::HTTP_NOT_FOUND);
     }
 }
