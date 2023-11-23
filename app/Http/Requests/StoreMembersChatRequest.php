@@ -9,6 +9,15 @@ use Illuminate\Http\Request;
 class StoreMembersChatRequest
 {
 
+    /**
+     * StoreMembersChatRequest::class
+     *
+     * @param  Request  $request
+     * @return void
+     * 
+     * @request $request->id (id do chat)
+     * @request $request->ids[] (ids dos usuários)
+     */
     public static function validate(Request $request)
     {
         $request->validate([

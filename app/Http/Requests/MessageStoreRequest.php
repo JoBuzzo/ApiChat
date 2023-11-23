@@ -6,6 +6,19 @@ use Illuminate\Http\Request;
 
 class MessageStoreRequest
 {
+    /**
+     * Undocumented function
+     *
+     * @param  Request  $request
+     * 
+     * @return void
+     * 
+     * @request $request->user_id
+     * @request $request->chat_id
+     * @request $request->parent_id (Id da mensagem que foi respondida)
+     * @request $request->media
+     * @request $request->content
+     */
     public static function validate(Request $request)
     {
         $request->validate([

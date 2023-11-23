@@ -16,7 +16,7 @@ class ChatStoreRequest
      * @return void
      * 
      * @request $request->name
-     * @request $request->ids[]
+     * @request $request->ids[] (ids dos usuários)
      * @request $request->photo
      * @request $request->description
      */

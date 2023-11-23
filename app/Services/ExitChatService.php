@@ -4,10 +4,19 @@ namespace App\Services;
 
 use App\Models\Chat;
 use App\Models\ChatUser;
+use App\Models\User;
+use Illuminate\Http\Response;
 
-class ExitChatService
+class ExitChatService extends Service
 {
 
+    /**
+     * Sair de um chat
+     *
+     * @param  Chat  $id
+     * @param  User  $user_id
+     * @return \App\Traits\HttpResponses
+     */
     public static function delete($id, $user_id)
     {
         $chat = Chat::with('users')->find($id);
@@ -26,9 +35,10 @@ class ExitChatService
 
             $chatUser->exit();
 
-            return response()->json(['success' => true]);
+            return self::noContent();
         }
-
-        return response()->json(['error' => 'Você não pode sair de um chat privado.']);
+        return self::error('Unauthorized',Response::HTTP_UNAUTHORIZED, [
+            'error' => 'You cannot leave a private chat.'
+        ]);
     }
 }

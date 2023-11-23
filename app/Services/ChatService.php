@@ -127,7 +127,7 @@ class ChatService extends Service
      * @return \App\Traits\HttpResponses
      * 
      * @request $request->name
-     * @request $request->ids[]
+     * @request $request->ids[] (ids dos usuários)
      * @request $request->photo
      * @request $request->description
      */

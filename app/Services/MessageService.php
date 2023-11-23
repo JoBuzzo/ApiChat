@@ -6,8 +6,23 @@ use App\Http\Requests\MessageStoreRequest;
 use App\Models\ChatUser;
 use App\Models\Message;
 use Illuminate\Http\Request;
-class MessageService
+use Illuminate\Http\Response;
+
+class MessageService extends Service
 {
+
+    /**
+     * Enviar mensagens em um chat
+     *
+     * @param  Request  $request
+     * @return \App\Traits\HttpResponses
+     * 
+     * @request $request->user_id
+     * @request $request->chat_id
+     * @request $request->parent_id (Id da mensagem que foi respondida)
+     * @request $request->media
+     * @request $request->content
+     */
     public static function store(Request $request)
     {
         MessageStoreRequest::validate($request);
@@ -28,8 +43,10 @@ class MessageService
                 'content' => $request->content,
                 'media' => $media,
             ]);
-            return response()->json(['message' => $message]);
+            return self::response('Message sent', Response::HTTP_OK, $message);
         }
-        return response()->json(['error' => 'chat não encontrado']); 
+        return self::error('Chat not found', Response::HTTP_NOT_FOUND, [
+            "error" => "Chat $request->chat_id not found"
+        ]);
     }
 }
